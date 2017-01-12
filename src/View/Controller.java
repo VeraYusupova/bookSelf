@@ -1,0 +1,115 @@
+package View;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import application.Main;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.Tooltip;
+
+public class Controller {
+
+	 private Main main;
+	 private ObservableList<Label> mylist;
+	 private String pathFile;
+	 
+	@FXML
+	ListView<Label> list;
+	@FXML
+	Button open;
+	@FXML
+	Button addAnnotation;
+	@FXML
+	Label path;
+	@FXML
+	TextArea annotation;
+	
+	@FXML
+	    private void initialize() throws IOException {			
+		//Вид файлов всегда из каталога в котором расположена программа
+		createList (new File("."));		
+		
+	   }
+	
+	    /**
+	     * Вызывается главным приложением, которое даёт на себя ссылку.
+	     * 
+	     * @param mainApp
+	     */
+	    public void setMain(Main main) {
+	        this.main = main;      	       
+	    }
+	    
+	    @FXML
+	    public void openButton() throws IOException{
+	    	File f = new File(pathFile  + list.getSelectionModel().getSelectedItem().getText());
+	    	if (list.getSelectionModel().getSelectedIndex() == 0){
+	    		createList (f.getParentFile().getCanonicalFile());
+	    	}
+	    	if (f.isDirectory()){
+	    		createList (f);
+	    	}
+	    	else {
+	    		//Desktop.getDesktop().open(f);
+	    		//System.out.println("------------------------" + Desktop.getDesktop().isDesktopSupported() );
+	    		System.out.println("------------------------" + f.canExecute());
+	    	}
+	    		
+	    }
+	    
+	    public void createList (File f) throws IOException{	    
+	    	mylist = FXCollections.observableArrayList();
+	    	pathFile = f.getCanonicalPath()+ File.separator;	
+			
+			for (int i = 0; i<f.list().length; i++){
+				File ff = new File(pathFile +f.list()[i]);
+				if (!ff.isHidden()){
+					mylist.add(new myLabel(ff));					
+					}
+			}
+			mylist.add(0, new Label("..")); //удивительная конструкция!!!!
+		    list.setItems(mylist);		    
+		    list.getSelectionModel().select(0);
+		    path.setText(pathFile);
+	    }
+	    
+	    @FXML
+	    public void addButton() throws IOException {
+	    	String nameFileSelect = list.getSelectionModel().getSelectedItem().getText();
+	    	new FileWork().writeFile(pathFile, nameFileSelect, annotation.getText());
+	    	
+            
+	    	}
+	    
+	    @FXML
+	    public void itemListSelect()  {
+	    	String nameFileSelect = list.getSelectionModel().getSelectedItem().getText();
+	    	File f = new File(pathFile+ "Annotation" +File.separator + nameFileSelect+ ".txt");
+	    	
+	    		try {
+					FileReader r = new FileReader(f);
+					BufferedReader reader = new BufferedReader(r);
+					String line;			        
+						while ((line = reader.readLine()) != null) 
+						    annotation.setText(line);
+					reader.close();
+				} catch (FileNotFoundException e) {					
+					//System.out.println(e.getMessage());
+					annotation.setText("");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					System.out.println(e.getMessage());
+				}
+	    	} 		
+	   
+}
