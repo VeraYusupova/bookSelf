@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 
 
@@ -19,7 +20,14 @@ public class Main extends Application {
 			Scene scene = new Scene(root,600,400);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
-			primaryStage.getIcons().add(new Image("ico.png"));
+			
+			try{
+				primaryStage.getIcons().add(new Image("ico.png"));
+			}
+			catch (IllegalArgumentException e) {
+				System.out.println("ico.png - " + e.getMessage());
+			}
+			
 			primaryStage.show();
 			
 		} catch(Exception e) {
