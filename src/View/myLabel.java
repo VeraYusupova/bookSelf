@@ -8,20 +8,25 @@ import javafx.scene.image.ImageView;
 
 public class myLabel extends Label {
 
-	public myLabel(File file) {
+	/**
+	 * @param file
+	 */
+	public myLabel(File file, String extention) {
 		if (file.isDirectory())
 			setImage("ico.png");			
-		String name = file.getName();
-		//узнаем расширение файла
-		String s = name.substring(name.lastIndexOf(".")+1);
-		//System.out.println(name.substring(name.lastIndexOf(".")+1)+" ");
 		
-		switch (s){
+		setText(file.getName());
+		
+		switch (extention){
 		case "png" : {
 			setImage("png.png");
 			break;
 		}
 		case "mp3" : {
+			setImage("mp3.png");
+			break;
+		}
+		case "m4a" : {
 			setImage("mp3.png");
 			break;
 		}
@@ -41,10 +46,20 @@ public class myLabel extends Label {
 			setImage("djvu.png");
 			break;
 		}
+		//jar файли и директорию с анотацией будут пустыми строками
+		case "annotation" : {
+			setText("");
+			break;
+		}
+		case "jar" : {
+			setText("");
+			break;
+		}
 		}
 		 
+		setStyle("-fx-font-family: Helvetica, Arial, sans-serif; -fx-font-size: 11pt;");
+
 		
-		setText(name);
 	}
 	
 
@@ -52,8 +67,8 @@ public class myLabel extends Label {
 		try{
 			Image image = new Image(nameImage);			
 			ImageView imageview = new ImageView(image);
-			imageview.setFitWidth(25);
-			imageview.setFitHeight(25);
+			imageview.setFitWidth(45);
+			imageview.setFitHeight(40);
 			setGraphic(imageview);	
 		}
 		catch (IllegalArgumentException e) {
