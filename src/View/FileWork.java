@@ -15,10 +15,16 @@ import java.io.IOException;
  */
 public class FileWork {
 	
+	public String fileExtention (File file){
+		String name = file.getName();
+		return name.substring(name.lastIndexOf(".")+1).toLowerCase();		
+	}
+	
 	public void writeFile(String path, String nameFile, String text) throws IOException{
 		
-		
-    	File f = new File (path +"Annotation/" + nameFile + ".txt");
+		new File(path).mkdirs();
+    	File f = new File (path + File.separator + nameFile + ".txt");
+    	
     	FileWriter writer = new FileWriter(f, false);
     	if (text.isEmpty()){
     		// TODO Auto-generated catch block
@@ -30,7 +36,7 @@ public class FileWork {
 	    	}
 	        catch(FileNotFoundException ex){
 	        	// System.out.println(ex.getMessage());
-	            new File(path+"Annotation").mkdirs();
+	            new File(path).mkdirs();
 	            writer = new FileWriter(f, false);
 	        } catch (IOException e) {
 				// TODO Auto-generated catch block
